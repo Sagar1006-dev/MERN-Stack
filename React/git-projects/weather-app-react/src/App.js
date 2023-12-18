@@ -1,9 +1,12 @@
-import './App.css';
+import React from "react";
+import Search from './components/Search'
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
-     <h1>Hello MOTO</h1>
+      {/*Search bar */}
+      <Search defaultData="Seoul" />
     </div>
   );
 }

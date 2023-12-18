@@ -12,7 +12,7 @@ const Credits = () => {
                 Coded by Sagar Muneshwar,{" "}
                 <a
                   className="link-github"
-                  href="https://github.com/milicodes/weather-app-react"
+                  href="https://github.com/Sagar1006-dev/MERN-Stack/tree/main/React/git-projects/weather-app-react"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
