@@ -1,0 +1,102 @@
+
+
+/* Reset some default styles */
+body,
+h1,
+ul,
+ol,
+dl {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+tfoot {
+    font-weight: bold;
+}
+
+ul,
+ol {
+    margin: 15px 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+dl {
+    margin: 20px 0;
+}
+
+dt {
+    font-weight: bold;
+}
+
+dd {
+    margin-bottom: 10px;
+}
+
+/* Additional styling for the lists */
+ul[type="square"] {
+    list-style-type: square;
+}
+
+ul[type="cirle"] {
+    list-style-type: circle;
+}
+
+/* Style the footer */
+footer {
+    margin-top: 20px;
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+
