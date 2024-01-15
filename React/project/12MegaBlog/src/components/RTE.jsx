@@ -2,10 +2,10 @@ import React from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { Controller } from "react-hook-form";
 
-export default RTE = ({ name, control, lable, defaultValue = "" }) => {
+const RTE = ({ name, control, label, defaultValue = "" }) => {
   return (
     <div className="w-full">
-      {lable && <lable className="inline-block mb-1 pl-14">{lable}</lable>}
+      {label && <label className="inline-block mb-1 pl-14">{label}</label>}
       <Controller
         name={name || "content"}
         control={control}
@@ -50,3 +50,5 @@ export default RTE = ({ name, control, lable, defaultValue = "" }) => {
     </div>
   );
 };
+
+export default RTE;

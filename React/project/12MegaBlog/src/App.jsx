@@ -4,9 +4,10 @@ import { useDispatch } from "react-redux";
 import { Footer, Header } from "./components";
 import authService from "./appwrite/auth";
 import { login, logout } from "./store/authSlice";
-import {Outlet} from "react-router-dom"
+import { Outlet } from "react-router-dom";
 
 function App() {
+  console.log(import.meta.env.VITE_APPWRITE_URL);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
@@ -24,16 +25,16 @@ function App() {
   }, []);
 
   return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-gray-400'>
-      <div className='w-full block'>
+    <div className="min-h-screen flex flex-wrap content-between bg-gray-400">
+      <div className="w-full block">
         <Header />
         <main>
-        TODO:  <Outlet />
+          TODO: <Outlet />
         </main>
         <Footer />
       </div>
     </div>
-  ) : null
+  ) : null;
 }
 
 export default App;
