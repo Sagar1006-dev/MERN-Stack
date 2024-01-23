@@ -1,0 +1,176 @@
+/* Universal selector for all elements */
+* {
+  box-sizing: border-box;
+}
+
+/* Selector for the HTML document */
+html {
+  height: 100%;
+}
+
+/* Selector for the body of the document */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+/* Selectors for the meta tags inside the head */
+meta {
+  /* Example: Apply styles to all meta tags */
+}
+
+/* Selector for the viewport meta tag */
+meta[name="viewport"] {
+  /* Example: Apply styles to the viewport meta tag */
+  width: device-width;
+  initial-scale: 1;
+}
+
+/* Selector for the title element in the head */
+title {
+  /* Example: Apply styles to the title element */
+}
+
+/* Selector for the link element with rel="stylesheet" */
+link[rel="stylesheet"] {
+  /* Example: Apply styles to linked stylesheets */
+}
+
+/* Selector for the h1 elements */
+h1 {
+  /* Example: Apply styles to all h1 elements */
+  color: #333;
+}
+
+/* Selector for the div element inside the body */
+div {
+  /* Example: Apply styles to all div elements */
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Selector for the video elements inside the div */
+video {
+  /* Example: Apply styles to all video elements */
+  margin: 10px;
+  width: 300px; /* Optional: Adjust the width of the videos */
+}
+
+/* Selector for the audio elements */
+audio {
+  /* Example: Apply styles to all audio elements */
+  margin: 10px;
+  width: 300px; /* Optional: Adjust the width of the audios */
+}
+
+/* Optional: Selector for video controls (play, pause, volume, etc.) */
+video::-webkit-media-controls {
+  /* Example: Apply styles to video controls */
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Optional: Selector for audio controls (play, pause, volume, etc.) */
+audio::-webkit-media-controls {
+  /* Example: Apply styles to audio controls */
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Optional: Selector for video progress bar */
+video::-webkit-media-slider {
+  /* Example: Apply styles to video progress bar */
+  background-color: #3498db;
+}
+
+/* Optional: Selector for audio progress bar */
+audio::-webkit-media-slider {
+  /* Example: Apply styles to audio progress bar */
+  background-color: #3498db;
+}
+/* Selector for the body's direct child h1 elements */
+body > h1 {
+  /* Example: Apply styles to direct child h1 elements of the body */
+}
+
+/* Selector for the first video element inside the div */
+div video:first-child {
+  /* Example: Apply styles to the first video element inside the div */
+}
+
+/* Selector for even audio elements inside the body */
+body audio:nth-child(even) {
+  /* Example: Apply styles to even audio elements inside the body */
+}
+
+/* Selector for odd video elements inside the div */
+div video:nth-child(odd) {
+  /* Example: Apply styles to odd video elements inside the div */
+}
+
+/* Selector for the video elements with a specific source attribute */
+video[src="1.mp4.mp4"] {
+  /* Example: Apply styles to video elements with src attribute "1.mp4.mp4" */
+}
+
+/* Selector for the audio elements with a specific source attribute */
+audio[src="1.mp3"] {
+  /* Example: Apply styles to audio elements with src attribute "1.mp3" */
+}
+
+/* Selector for the last audio element inside the body */
+body audio:last-child {
+  /* Example: Apply styles to the last audio element inside the body */
+}
+
+/* Selector for all video elements with controls attribute */
+video[controls] {
+  /* Example: Apply styles to all video elements with controls attribute */
+}
+
+/* Selector for video elements with controls attribute and specific source */
+video[controls][src="2.mp4.mp4"] {
+  /* Example: Apply styles to video elements with controls and src="2.mp4.mp4" */
+}
+/* Selector for video elements inside the div, only if they are preceded by an h1 */
+h1 + div video {
+  /* Example: Apply styles to video elements inside the div, only if they are preceded by an h1 */
+}
+
+/* Selector for the direct child video elements inside the div */
+div > video {
+  /* Example: Apply styles to direct child video elements inside the div */
+}
+
+/* Selector for the direct child audio elements inside the body */
+body > audio {
+  /* Example: Apply styles to direct child audio elements inside the body */
+}
+
+/* Selector for odd-numbered video elements inside the div */
+div video:nth-of-type(odd) {
+  /* Example: Apply styles to odd-numbered video elements inside the div */
+}
+
+/* Selector for even-numbered audio elements inside the body */
+body audio:nth-of-type(even) {
+  /* Example: Apply styles to even-numbered audio elements inside the body */
+}
+
+/* Selector for video elements that are currently being played */
+video:playing {
+  /* Example: Apply styles to video elements that are currently being played */
+}
+
+/* Selector for audio elements that are paused */
+audio:paused {
+  /* Example: Apply styles to audio elements that are paused */
+}
+
+/* Selector for video elements when the user hovers over them */
+video:hover {
+  /* Example: Apply styles to video elements when the user hovers over them */
+}
+
+/* Selector for audio elements when the user clicks on them */
+audio:active {
+  /* Example: Apply styles to audio elements when the user clicks on them */
+}

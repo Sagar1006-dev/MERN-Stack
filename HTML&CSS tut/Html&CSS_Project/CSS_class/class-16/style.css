@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+video, audio {
+    margin: 10px;
+}
+
+/* Optional: Adjust the width of the videos and audios for better layout */
+video, audio {
+    width: 300px;
+}
+
+/* Optional: Style for controls (play, pause, volume, etc.) */
+video::-webkit-media-controls {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+audio::-webkit-media-controls {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Optional: Style for progress bar */
+video::-webkit-media-slider {
+    background-color: #3498db;
+}
+
+audio::-webkit-media-slider {
+    background-color: #3498db;
+}
