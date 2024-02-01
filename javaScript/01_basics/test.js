@@ -13,3 +13,18 @@ accountCiy = "pune"
 
 console.log(accountId);
 console.table([accountId, accountEmaail, accountPassword, accountCiy]);
+
+// Datatypes
+// primitive data types
+// String
+// Number
+// BigInt
+// Boolean
+// null => standalone value
+// undefined
+// Symbol => uique
+
+ // non-primitive data types
+// Array
+// Object
+console.log(typeof accountEmaail);
