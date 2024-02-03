@@ -1,0 +1,31 @@
+/* Result.css */
+
+#result {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+    background-color: black; /* Set the background color to black */
+    color: white; /* Set the text color to white */
+  }
+  
+  #result th, #result td {
+    border: 1px solid #333; /* Adjust border color */
+    padding: 10px;
+    text-align: center;
+  }
+  
+  #result th {
+    background-color: #222; /* Adjust header background color */
+  }
+  
+  #result tbody tr:nth-child(even) {
+    background-color: #111; /* Adjust even row background color */
+  }
+  
+  #result thead th {
+    background-color: #333; /* Adjust header row background color */
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
