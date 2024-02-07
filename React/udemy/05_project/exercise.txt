@@ -1,0 +1,762 @@
+Managing Other Values with Refs
+Your working on a "Workout" app and your task is to start and stop timers when users click the "Start" and "Stop" buttons of a selected workout.
+
+You're provided with some code that already displays some workout items, therefore, you don't need to work on the JSX code or manage any state.
+
+Instead, your task is to set a timer if the "Start" button is clicked and clear (stop) that timer once the "Stop" button is clicked.
+
+If a timer expires, the same code that should execute if it's stopped manually (by pressing the "Stop" button) should be executed.
+
+The timer expiration time should be different for every workout - take a closer look at the Workout component to get access to that workout-specific time.
+
+You also must make sure that different Workout component instances set and manage separate, independent timers (i.e., when starting timers for "Pushups" and "Squats", clicking "Stop" for "Squats" should not stop the "Pushups" timer etc).
+
+When a timer expires, the same function that's triggered when the "Stop" button is pressed should be executed.
+
+Important: In this Udemy exercise environment, React Hooks can't be imported directly. Instead, you have to import React from 'react' and then call Hooks on that React object (e.g., React.useState()).
+
+solutio ===>
+In the solution, a timer is started in the handleStartWorkout function in the Workout component function by calling setTimeout.
+
+As a first argument for setTimeout, a pointer at the handleStopWorkout function is provided - since that's the function that should be executed whenever the workout is stopped or the timer is done. The second argument is set to the time prop value since that's the workout time in milliseconds (passed to Workout in the App component):
+
+
+
+export default function Workout({ title, description, time, onComplete }) {
+  function handleStartWorkout() {
+    setTimeout(handleStopWorkout, time);
+  }
+ 
+  function handleStopWorkout() {
+    onComplete();
+  }
+ 
+  return (
+    <article className="workout">
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <p>{time}</p>
+      <p>
+        <button onClick={handleStartWorkout}>Start</button>
+        <button onClick={handleStopWorkout}>Stop</button>
+      </p>
+    </article>
+  );
+}
+
+
+To stop the timer from inside handleStopWorkout, a timer reference (which is returned automatically by setTimeout) must be stored and used with clearTimeout (a built-in function that stops a given timer).
+
+This timer reference should not be stored in a standard variable defined inside the component function since that variable would be overwritten every time the component function is re-executed (e.g., because the parent component is re-executed).
+
+It should also not be stored in a variable defined outside of the component function since that variable would be shared across all Workout component instances (i.e., stopping a timer from inside the "Pushups" instance could then stop the timer for "Squats" instance etc).
+
+Therefore, using a "ref" via React's useRef() Hook is the solution! Because "refs" are not re-created when the component function is executed again. And they're also not shared across component instances.
+
+Hence, a new timer ref is created and used to store the timer reference returned by setTimeout.
+
+Important: The timer reference is stored inside of timer.current since React "refs" always are objects with a current property which should hold the actual ref value.
+
+This stored timer reference is then used inside of the handleStopWorkout function to stop the timer with help of the built-in clearTimeout function:
+
+
+
+import React from 'react';
+ 
+export default function Workout({ title, description, time, onComplete }) {
+  const timer = React.useRef();
+ 
+  function handleStartWorkout() {
+    timer.current = setTimeout(handleStopWorkout, time);
+  }
+ 
+  function handleStopWorkout() {
+    clearTimeout(timer.current);
+    onComplete();
+  }
+ 
+  return (
+    <article className="workout">
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <p>{time}</p>
+      <p>
+        <button onClick={handleStartWorkout}>Start</button>
+        <button onClick={handleStopWorkout}>Stop</button>
+      </p>
+    </article>
+  );
+}
+import React from 'react';
+
+import Workout from './Workout';
+
+const workouts = [
+  {
+    title: 'Pushups',
+    description: 'Do 30 pushups',
+    time: 1000 * 60 * 3,
+  },
+  {
+    title: 'Squats',
+    description: 'Do 30 squats',
+    time: 1000 * 60 * 2,
+  },
+  {
+    title: 'Pullups',
+    description: 'Do 10 pullups',
+    time: 1000 * 60 * 3,
+  },
+];
+
+function App() {
+  const [completedWorkouts, setCompletedWorkouts] = React.useState([]);
+
+  function handleWorkoutComplete(workoutTitle) {
+    setCompletedWorkouts((prevCompletedWorkouts) => [
+      ...prevCompletedWorkouts,
+      workoutTitle,
+    ]);
+  }
+
+  return (
+    <main>
+      <section>
+        <h2>Choose a workout</h2>
+        <ul>
+          {workouts.map((workout) => (
+            <li key={workout.title}>
+              <Workout
+                {...workout}
+                onComplete={() => handleWorkoutComplete(workout.title)}
+              />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
+        <h2>Completed workouts</h2>
+        <ul>
+          {completedWorkouts.map((workoutTitle, index) => (
+            <li key={index}>{workoutTitle}</li>
+          ))}
+        </ul>
+      </section>
+    </main>
+  );
+}
+
+export default App;
+import React from 'react';
+
+export default function Workout({ title, description, time, onComplete }) {
+  const timerRef = React.useRef(null);
+
+  function handleStartWorkout() {
+    if (timerRef.current === null) {
+      timerRef.current = setTimeout(() => {
+        onComplete();
+        console.log(`${title} workout completed!`);
+      }, time);
+    }
+  }
+
+  function handleStopWorkout() {
+    if (timerRef.current !== null) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+      console.log(`${title} workout stopped.`);
+    }
+    onComplete();
+  }
+
+  return (
+    <article className="workout">
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <p>{time}</p>
+      <p>
+        <button onClick={handleStartWorkout}>Start</button>
+        <button onClick={handleStopWorkout}>Stop</button>
+      </p>
+    </article>
+  );
+}
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(#180d27, #0c0219);
+  color: #e5d9f1;
+  min-height: 100vh;
+}
+
+section {
+  width: 90%;
+  max-width: 40rem;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #6a887f;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #000000;
+}
+
+section h2 {
+  text-align: center;
+  font-family: 'Lato', sans-serif;
+  text-transform: uppercase;
+  font-size: 1.25rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+article {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #87efce;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #000000;
+  width: 20rem;
+}
+
+article h3 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+article p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+article button {
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #054a35;
+  color: #ffffff;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+article button:hover {
+  background: #087f5b;
+}
+===========================================
+Forwarding Refs
+Your task is to finish a custom Input component that was created by a colleague.
+
+The Input component must be highly configurable and meet the following requirements:
+
+It must accept a label prop which is used to set the text for the <label> element (i.e., between the <label> tags)
+
+It must accept all other attributes that could be added to <input> elements and set those props on the <input> element
+
+It must accept the special ref prop and connect the received ref to the <input> element
+
+This Input component can then be used in the App component. There, it's actually already being used and some props (the label and type props) are already set on the custom Input component.
+
+But in addition, your task also is to read the entered name and email values inside of the handleSaveData function with help of React's "ref" feature.
+
+To achieve this task, you must ensure that the custom Input component is able to receive the special ref prop and that this prop is then "connected" to the returned <input> element.
+
+Of course you also must add fitting refs to the App component and use them in handleSaveData to retrieve the actual entered input data.
+
+The read values must then be stored in the already-existing userData object.
+
+Important: In this Udemy exercise workspace, any React Hooks must be accessed directly on the imported React object (import React from 'react') - for example: React.useState().
+
+The same is true for other React functions you might need to solve this task!
+
+solution ====>
+In the solution, as a first step, a label prop is "pulled out" of the incoming props object in the Input component function. In addition, any other props are grouped into a props object via JavaScript's ...props syntax.
+
+The label prop is then output as a text value between the <label> tags, the collected props are spread onto the <input> element:
+
+
+
+export default function Input({ label, ...props }) {
+  return (
+    <p className="control">
+      <label>{label}</label>
+      <input {...props} />
+    </p>
+  );
+}
+
+
+To allow the App component to pass a ref value to the Input component, the Input component is wrapped with React's forwardRef function. This function is required since the special ref prop can not be accepted or destructured like those other props.
+
+Therefore, the Input component function is wrapped with forwardRef and the returned object is then stored in a Input constant which is exported as a default.
+
+Component functions wrapped with forwardRef then receive a second parameter (besides the props object which is the first parameter): a ref parameter that contains the value that might be set for the special ref prop.
+
+This ref parameter can then be used like any other ref in React - it can, for example, be "connected" to JSX elements. Hence, to meet the task requirements, it is set as a value for the ref prop on the <input> element in this case.
+
+Therefore, the Input component function file now contains this code:
+
+
+
+import React from 'react';
+ 
+const Input = React.forwardRef(function Input({ label, ...props }, ref) {
+  return (
+    <p className="control">
+      <label>{label}</label>
+      <input ref={ref} {...props} />
+    </p>
+  );
+});
+ 
+export default Input;
+
+
+With the Input component enhanced and finished, the App component code should therefore now also be changed.
+
+In order to read the entered name and email values inside the handleSaveData function, two refs are created with help of React's useRef() Hook.
+
+These refs are then forwarded to the Input component by setting them as values on the Input component's special ref prop (which can now be set thanks to forwardRef).
+
+Inside handleSaveData, those refs can then be used to access and read the entered values:
+
+
+
+import React from 'react';
+ 
+import Input from './Input';
+ 
+export const userData = {
+  name: '',
+  email: '',
+};
+ 
+export function App() {
+  const name = React.useRef();
+  const email = React.useRef();
+ 
+  function handleSaveData() {
+    const enteredName = name.current.value;
+    const enteredEmail = email.current.value;
+ 
+    userData.name = enteredName;
+    userData.email = enteredEmail;
+ 
+    console.log(userData);
+  }
+ 
+  return (
+    <div id="app">
+      <Input type="text" label="Your Name" ref={name} />
+      <Input type="email" label="Your E-Mail" ref={email} />
+      <p id="actions">
+        <button onClick={handleSaveData}>Save Data</button>
+      </p>
+    </div>
+  );
+}
+
+import React, { useRef } from 'react';
+
+const Input = React.forwardRef((props, ref) => {
+  return (
+    <div>
+      <label>{props.label}</label>
+      <input ref={ref} {...props} />
+    </div>
+  );
+});
+
+export const userData = {
+  name: '',
+  email: '',
+};
+
+export function App() {
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+
+  function handleSaveData() {
+    userData.name = nameRef.current.value;
+    userData.email = emailRef.current.value;
+
+    console.log(userData);
+  }
+
+  return (
+    <div id="app">
+      <Input type="text" label="Your Name" ref={nameRef} />
+      <Input type="email" label="Your E-Mail" ref={emailRef} />
+      <p id="actions">
+        <button onClick={handleSaveData}>Save Data</button>
+      </p>
+    </div>
+  );
+}
+import React from 'react';
+
+const Input = React.forwardRef((props, ref) => {
+  return (
+    <p className="control">
+      <label>{props.label}</label>
+      <input ref={ref} {...props} />
+    </p>
+  );
+});
+
+export default Input;
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(#180d27, #0c0219);
+  color: #e5d9f1;
+  min-height: 100vh;
+}
+
+#app {
+  margin: 2rem auto;
+  padding: 1rem;
+  max-width: 30rem;
+  text-align: center;
+  border-radius: 6px;
+  background: linear-gradient(#341a89, #3a1967);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.control {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.control label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  color: #e5d9f1;
+}
+
+.control input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-family: 'Lato', sans-serif;
+  border: 1px solid #e5d9f1;
+  border-radius: 4px;
+  background: transparent;
+  color: #e5d9f1;
+}
+
+#actions {
+  text-align: right;
+}
+
+#actions button {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  border: none;
+  border-radius: 4px;
+  background: none;
+  color: #e5d9f1;
+  cursor: pointer;
+}
+
+#actions button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+==========================================================
+
+Exposing Component APIs
+Your working on a part of an application that contains a form which should be resettable from outside that form.
+
+A colleague prepared a Form component that contains a couple of dummy inputs and a "Save" button that's not doing anything.
+
+Your task is to expose a clear() function from inside that Form component so that other components that use the Form component can call that function to reset the form.
+
+Because that exposed clear() function should call the form's built-in reset() method (the JS form object, which is the underlying object of the <form> element, has a reset() method that does exactly what its name implies).
+
+So the Form component should be usable like this:
+
+
+
+function SomeComponent() {
+  const form = React.useRef();
+ 
+  function handleClear() {
+    form.current.clear();
+  }
+ 
+  return <Form ref={form}/>
+}
+
+
+After adding this feature to the Form component you should tweak the App component to establish a "connection" to the Form component and call the newly exposed clear() method from inside the App component's handleRestart() function.
+
+So you should add code similar to the above code snippet to the App component.
+
+Important: In this Udemy exercise workspace, any React Hooks (and other React functions!) must be accessed directly on the imported React object (import React from 'react') - for example: React.useState().
+
+
+solution=======>
+In the solution, as a first step, a ref is created inside the Form component. This ref is then "connected" to the <form> element and will be used for calling the form's reset() method whenever the (to-be-added) clear() method will be called from inside some other component:
+
+
+
+import React from 'react';
+ 
+export default function Form(props, ref) {
+  const form = React.useRef();
+ 
+  return (
+    <form ref={form}>
+      <p>
+        <label>Name</label>
+        <input type="text" />
+      </p>
+ 
+      <p>
+        <label>Email</label>
+        <input type="email" />
+      </p>
+      <p id="actions">
+        <button>Save</button>
+      </p>
+    </form>
+  );
+}
+
+
+To expose a clear() method that can be called from inside the App component, React's useImperativeHandle Hook must be used. This Hook allows you (= the developer) to expose an API (a collection of methods) from a component to other components.
+
+This useImperativeHandle Hook needs a (forwarded) ref (coming from the component that wants to access the exposed API) as a first input value.
+
+As a second argument, it expects to get a function that must return an object that contains all methods that should be exposed.
+
+Therefore, the Form component is also wrapped with forwardRef.
+
+Inside the object returned in the second argument function of useImperativeHandle, a clear() method is added. Inside that method, the form ref is used to access the JavaScript form object (belonging to <form>) and call its reset() method.
+
+
+
+import React from 'react';
+ 
+const Form = React.forwardRef(function Form(props, ref) {
+  const form = React.useRef();
+  React.useImperativeHandle(ref, () => {
+    return {
+      clear() {
+        form.current.reset();
+      },
+    };
+  });
+ 
+  return (
+    <form ref={form}>
+      <p>
+        <label>Name</label>
+        <input type="text" />
+      </p>
+ 
+      <p>
+        <label>Email</label>
+        <input type="email" />
+      </p>
+      <p id="actions">
+        <button>Save</button>
+      </p>
+    </form>
+  );
+});
+ 
+export default Form;
+
+
+Finally, the App component is edited to call that clear() method from inside handleRestart.
+
+A new ref (form) is created and passed via the special ref prop to the custom Form component.
+
+That form ref is then used to call the Form component's clear() method:
+
+
+
+import React from 'react';
+ 
+import Form from './Form';
+ 
+export function App() {
+  const form = React.useRef();
+ 
+  function handleRestart() {
+    form.current.clear();
+  }
+ 
+  return (
+    <div id="app">
+      <button onClick={handleRestart}>Restart</button>
+      <Form ref={form} />
+    </div>
+  );
+}
+
+import React from 'react';
+import Form from './Form';
+
+export function App() {
+  const formRef = React.useRef();
+
+  function handleRestart() {
+    formRef.current.clear();
+  }
+
+  return (
+    <div id="app">
+      <button onClick={handleRestart}>Restart</button>
+      <Form ref={formRef} />
+    </div>
+  );
+}
+
+import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+
+const Form = forwardRef((props, ref) => {
+  const formRef = useRef(null);
+
+  // Expose clear() function to the parent component
+  useImperativeHandle(ref, () => ({
+    clear: () => {
+      if (formRef.current) {
+        formRef.current.reset();
+      }
+    }
+  }));
+
+  return (
+    <form ref={formRef} {...props}>
+      <p>
+        <label>Name</label>
+        <input type="text" />
+      </p>
+
+      <p>
+        <label>Email</label>
+        <input type="email" />
+      </p>
+      <p id="actions">
+        <button>Save</button>
+      </p>
+    </form>
+  );
+});
+
+export default Form;
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(#180d27, #0c0219);
+  color: #e5d9f1;
+  min-height: 100vh;
+}
+
+#app {
+  margin: 2rem auto;
+  padding: 1rem;
+  max-width: 30rem;
+  text-align: center;
+  border-radius: 6px;
+  background: linear-gradient(#341a89, #3a1967);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+button {
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.5rem 1rem;
+  border: 1px solid white;
+  border-radius: 6px;
+  background: none;
+  color: #e5d9f1;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+form button {
+  background: linear-gradient(#9e21c8, #8b179c);
+  border: none;
+}
+
+form {
+  width: 90%;
+  max-width: 40rem;
+  margin: 3rem auto;
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  text-align: left;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+}
+
+form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e5d9f1;
+  border-radius: 6px;
+  background: none;
+  color: #e5d9f1;
+  font-size: 1rem;
+  font-family: 'Lato', sans-serif;
+  margin-bottom: 1rem;
+}
+
+#actions {
+  text-align: right;
+}
