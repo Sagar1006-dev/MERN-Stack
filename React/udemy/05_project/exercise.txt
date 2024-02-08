@@ -760,3 +760,187 @@ form input {
 #actions {
   text-align: right;
 }
+
+////////////////////////////////////////////////////
+Working with Portals
+A colleague asked you to finish work on a Toast component they worked on.
+
+That component should output a short info message upon certain page events - e.g., once a user successfully enrolled into a course.
+
+To optimize the final DOM structure, the rendered content of the Toast component should be injected directly into the <body> element (which could be selected via document.querySelector('body')). It should NOT be rendered in the place where the <Toast /> component is used in the JSX code!
+
+For this task, the edited Toast component should then be displayed conditionally once a user clicked the Enrol button in the App component.
+
+After 3 seconds (set via setTimeout), the Toast component should be removed from the page again.
+
+Important: In this Udemy exercise workspace, any React Hooks (and other React functions) must be accessed directly on the imported React object (import React from 'react') - for example: React.useState().
+
+The same is true for any functions that are part of the react-dom library - you must instead import ReactDOM from 'react-dom' and then call any functions on that ReactDOM object (ReactDOM.someFunction()).
+
+solution =====>
+In the solution, as a first step, the createPortal function exposed by react-dom is used to "move" the JSX code returned by the Toast component directly into the <body> element. That element is selected (and passed as a second argument to createPortal()) via the built-in document.querySelector('body') method.
+
+The improved Toast component therefore looks like this:
+
+
+
+import ReactDOM from 'react-dom';
+ 
+export default function Toast({ message }) {
+  return ReactDOM.createPortal(
+    <aside className="toast" data-testid="toast">
+      <p>{message}</p>
+    </aside>,
+    document.querySelector('body')
+  );
+}
+
+
+To show this Toast component conditionally, a new piece of state (toastVisible) is added to the App component.
+
+There, it's set to true inside of handleEnrol and set to false inside the callback function that's passed to setTimeout.
+
+toastVisible is then used to conditionally render the <Toast /> component:
+
+
+
+import React from 'react';
+ 
+import Toast from './Toast';
+ 
+function App() {
+  const [toastVisible, setToastVisible] = React.useState(false);
+ 
+  function handleEnrol() {
+    setToastVisible(true);
+ 
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 3000);
+  }
+ 
+  return (
+    <div id="app">
+      {toastVisible && <Toast message="Enrolled successfully!" />}
+      <article>
+        <h2>React Course</h2>
+        <p>
+          A course that teaches you React from the ground up and in great depth!
+        </p>
+        <button onClick={handleEnrol}>Enrol</button>
+      </article>
+    </div>
+  );
+}
+ 
+export default App;
+
+
+import React from 'react';
+ 
+import Toast from './Toast';
+ 
+function App() {
+  const [toastVisible, setToastVisible] = React.useState(false);
+ 
+  function handleEnrol() {
+    setToastVisible(true);
+ 
+    setTimeout(() => {
+      setToastVisible(false);
+    }, 3000);
+  }
+ 
+  return (
+    <div id="app">
+      {toastVisible && <Toast message="Enrolled successfully!" />}
+      <article>
+        <h2>React Course</h2>
+        <p>
+          A course that teaches you React from the ground up and in great depth!
+        </p>
+        <button onClick={handleEnrol}>Enrol</button>
+      </article>
+    </div>
+  );
+}
+ 
+export default App;
+
+import ReactDOM from 'react-dom';
+ 
+export default function Toast({ message }) {
+  return ReactDOM.createPortal(
+    <aside className="toast" data-testid="toast">
+      <p>{message}</p>
+    </aside>,
+    document.querySelector('body')
+  );
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(#180d27, #0c0219);
+  color: #e5d9f1;
+  min-height: 100vh;
+}
+
+#app {
+  margin: 2rem auto;
+  padding: 1rem;
+  max-width: 30rem;
+  text-align: center;
+  border-radius: 6px;
+  background: linear-gradient(#341a89, #3a1967);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+button {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #e5d9f1;
+  color: #341a89;
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.toast {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+  padding: 1rem;
+  border-radius: 4px;
+  background: rgba(118, 234, 189, 0.8);
+  color: black;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  animation: fade-slide-in-from-left 0.3s ease-out;
+}
+
+.toast p {
+  margin: 0;
+}
+
+@keyframes fade-slide-in-from-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  } 
+}
