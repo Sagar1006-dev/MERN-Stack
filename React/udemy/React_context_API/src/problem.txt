@@ -1,0 +1,442 @@
+Creating & Using Context
+Your task is to add a "theming" feature to a demo app you're given by a colleague. This "theming" feature should be implemented with help of React's Context API.
+
+Your main goal is to ensure that the "Toggle Theme" button in the Header component triggers a (to-be-added) toggleTheme() function exposed through context.
+
+The context value should be dynamic and managed inside the ThemeContextProvider.js file. The current theme mode should be managed as a value that's either  'light' or 'dark' and exposed via a theme property on the overall context object.
+
+The context object should also expose the above-mentioned toggleTheme() method that changes the theme property's value ('light' <-> 'dark').
+
+The Header component needs access to the context to call the toggleTheme() method, the Page component will need access to apply a the CSS class 'light' (for theme === 'light') or the class 'dark' (theme === 'dark') to the <div id="app">.
+
+In the end, the app should look like this if the theme was not changed or switched multiple times (i.e., 'light' mode):
+
+
+And it should look like this, if theme was toggled to 'dark':
+
+
+Important: In this Udemy exercise workspace, any React Hooks (and other React functions!) must be accessed directly on the imported React object (import React from 'react') - for example: React.useState().
+
+solution ====>
+In the solution, as a first step, a new context object is created in the ThemeContextProvider.js file.
+
+This context object is created via React's createContext() function - it's also exported to make it available in other files. It receives an initial (dummy) value which is an object that exposes a theme property and an (empty) toggleTheme() method:
+
+
+
+import React from 'react';
+ 
+export const ThemeContext = React.createContext({
+  theme: 'light',
+  toggleTheme: () => {},
+});
+
+
+To provide this context to other components, in the same file, a ThemeContextProvider component is created and exported as a default.
+
+This ThemeContextProvider should be wrappable around other JSX code - therefore, the special, built-in children prop is "pulled out" of the incoming props and wrapped with <ThemeContext.Provider> (a component created by React, exposed through the ThemeContext object).
+
+
+
+import React from 'react';
+ 
+export const ThemeContext = React.createContext({
+  theme: 'light',
+  toggleTheme: () => {},
+});
+ 
+export default function ThemeContextProvider({ children }) {
+  return <ThemeContext.Provider>{children}</ThemeContext.Provider>;
+}
+
+
+This context should expose a dynamic (i.e., changeable) value.
+
+Therefore, React's useState() Hook is used to manage the theme value. As an initial value, 'light' is chosen - this will ensure that the app starts in "light mode".
+
+In addition, a toggleTheme() function is added to the ThemeContextProvider component. This function switches the theme from 'light' to 'dark' and vice versa.
+
+Both the theme state and the toggleTheme() function are then grouped into a value object that's set as a value for the <ThemeContext.Provider> component:
+
+
+
+import React from 'react';
+ 
+export const ThemeContext = React.createContext({
+  theme: 'light',
+  toggleTheme: () => {},
+});
+ 
+export default function ThemeContextProvider({ children }) {
+  const [theme, setTheme] = React.useState('light');
+ 
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      return prevTheme === 'light' ? 'dark' : 'light';
+    });
+  };
+ 
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+
+To use and provide this context to all interested components, the <Page /> component in the App component is now wrapped with this custom ThemeContextProvider component:
+
+
+
+import Page from './Page';
+import ThemeContextProvider from './ThemeContextProvider';
+ 
+function App() {
+  return (
+    <ThemeContextProvider>
+      <Page />
+    </ThemeContextProvider>
+  );
+}
+ 
+export default App;
+
+
+Now, the context can be consumed and used by the Page component and descendant components of the Page component (i.e., the Header component in this case).
+
+In the Header component, the ThemeContext is imported and "read" with help of React's useContext() Hook.
+
+This allows us to then get access to the context's toggleTheme() function and set it as a value for the onClick prop of the <button>Toggle Theme</button>:
+
+
+
+import React from 'react';
+ 
+import { ThemeContext } from './ThemeContextProvider';
+ 
+export default function Header() {
+  const themeCtx = React.useContext(ThemeContext);
+ 
+  return (
+    <header>
+      <h1>Demo Website</h1>
+      <button onClick={themeCtx.toggleTheme}>Toggle Theme</button>
+    </header>
+  );
+}
+
+
+Finally, to adjust the look of the page, the Page component also uses useContext() to get access to the (dynamic) theme property.
+
+Since the goal is to conditionally set a 'light' or 'dark' CSS class on the <div id="app"> (inside the Page component) and the theme property contains either 'light' or 'dark' as a value, it's the theme property value itself that can be set as a CSS class:
+
+
+
+import React from 'react';
+ 
+import Header from './Header';
+import { ThemeContext } from './ThemeContextProvider';
+ 
+export default function Page() {
+  const themeCtx = React.useContext(ThemeContext);
+ 
+  return (
+    <div id="app" className={themeCtx.theme}>
+      <Header />
+ 
+      <article>
+        <h2>React Course</h2>
+        <p>
+          A course that teaches you React from the ground up and in great depth!
+        </p>
+      </article>
+    </div>
+  );
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(#180d27, #0c0219);
+  color: #e5d9f1;
+  min-height: 100vh;
+}
+
+#app {
+  margin: 2rem auto;
+  padding: 1rem;
+  width: 90%;
+  max-width: 50rem;
+  text-align: center;
+  border-radius: 6px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+#app.light {
+  background: linear-gradient(#e5d9f1, #e5d9f1);
+  color: #180d27;
+}
+
+#app.dark {
+  background: linear-gradient(#341f4f, #2a0c52);
+  color: #e5d9f1;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+h1 {
+  letter-spacing: 0.15rem;
+  font-family: 'Lato', sans-serif;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+header button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+  margin: 0 0.5rem;
+  padding: 0.25rem 0.5rem;
+}
+
+
+
+=========================================
+Using useReducer()
+Your task is to build a basic counter app that uses React's useReducer() Hook for state management - not the useState() Hook!
+
+To achieve this goal, you should enhance the already existing counterReducer function that can be found right next to the App component (don't remove the export keyword!).
+
+In addition, inside the App component, the useReducer Hook should be used with that reducer function to manage the counter state.
+
+The three <button> elements should be "connected" to the reducer-managed state (i.e., they should trigger state changes), the <p id="counter"> element should output the count value.
+
+Important: The state managed with help of the reducer must be an object of the following shape:
+
+
+
+{
+  count: 0; // of course, 0 is not static but changes as the different <button>s are clicked
+} 
+
+
+When dispatching actions, you should make sure that every action is an object that has a type property (it must be named type - other names will make the automatic checks fail!) that contains either 'INCREMENT', 'DECREMENT' or 'RESET' as a value!
+
+Important: In this Udemy exercise workspace, any React Hooks must be accessed directly on the imported React object (import React from 'react') - for example: React.useState().
+
+
+
+solution ====>
+In the solution, as a first step, the existing counterReducer() function is edited to accept two parameters:
+
+A state value
+
+A dispatched action
+
+The values for these parameters will be provided by React since it'll be React that calls this counterReducer() function in the end (it does that when you dispatch an action).
+
+For this task, all dispatched actions should be objects that each have a type property (which is either 'INCREMENT', 'DECREMENT' or 'RESET') - therefore, three if checks are added to the reducer to handle these different cases.
+
+In addition, in case some unknown action should be dispatched, the unchanged state is returned:
+
+
+
+export function counterReducer(state, action) {
+  if (action.type === 'INCREMENT') {
+    // Todo...
+  } else if (action.type === 'DECREMENT') {
+    // Todo...
+  } else if (action.type === 'RESET') {
+    // Todo...
+  }
+ 
+  return state;
+}
+
+
+In case the action.type is 'INCREMENT', the counter value should be increased by 1. For 'DECREMENT' it should be reduced by 1. And for 'RESET', it should be set back to 0.
+
+As described in the task definition, the state should be an object that contains that counter value (a count property), therefore the counterReducer function is updated appropriately:
+
+
+
+export function counterReducer(state, action) {
+  if (action.type === 'INCREMENT') {
+    return { count: state.count + 1 };
+  } else if (action.type === 'DECREMENT') {
+    return { count: state.count - 1 };
+  } else if (action.type === 'RESET') {
+    return { count: 0 };
+  }
+ 
+  return state;
+}
+
+
+With the counterReducer finished, the useReducer() Hook is added to the App component function body.
+
+This Hook receives two main arguments:
+
+The connected reducer function (that will be invoked whenever an action is dispatched)
+
+The initial state value
+
+Therefore, the App component function looks like this:
+
+
+
+export function counterReducer(state, action) {
+  /* ... */
+} // code left out here for brevity - it's the same as above
+ 
+function App() {
+  React.useReducer(counterReducer, { count: 0 });
+ 
+  return (
+    <div id="app">
+      <h1>The (Final?) Counter</h1>
+      <p id="actions">
+        <button>Increment</button>
+        <button>Decrement</button>
+        <button>Reset</button>
+      </p>
+      <p id="counter"></p>
+    </div>
+  );
+}
+
+
+useReducer() then returns an array with exactly two elements:
+
+The current state
+
+A "dispatch" function that can be called to dispatch a new action
+
+Array destructuring can be used to store these elements in separate constants or variables.
+
+The state value is then used to output the current counter value (via {counterState.count} since the state is an object with a count property).
+
+The dispatch function is triggered, with different action objects (with different types), when the <button>s are clicked:
+
+
+
+import React from 'react';
+ 
+export function counterReducer(state, action) {
+  if (action.type === 'INCREMENT') {
+    return { count: state.count + 1 };
+  } else if (action.type === 'DECREMENT') {
+    return { count: state.count - 1 };
+  } else if (action.type === 'RESET') {
+    return { count: 0 };
+  }
+ 
+  return state;
+}
+ 
+function App() {
+  const [counterState, dispatchCounterAction] = React.useReducer(
+    counterReducer,
+    { count: 0 }
+  );
+ 
+  return (
+    <div id="app">
+      <h1>The (Final?) Counter</h1>
+      <p id="actions">
+        <button onClick={() => dispatchCounterAction({ type: 'INCREMENT' })}>
+          Increment
+        </button>
+        <button onClick={() => dispatchCounterAction({ type: 'DECREMENT' })}>
+          Decrement
+        </button>
+        <button onClick={() => dispatchCounterAction({ type: 'RESET' })}>
+          Reset
+        </button>
+      </p>
+      <p id="counter">{counterState.count}</p>
+    </div>
+  );
+}
+ 
+export default App;
+
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(#180d27, #0c0219);
+  color: #e5d9f1;
+  min-height: 100vh;
+}
+
+#app {
+  margin: 2rem auto;
+  padding: 1rem;
+  max-width: 30rem;
+  text-align: center;
+  border-radius: 6px;
+  background: linear-gradient(#341a89, #3a1967);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  letter-spacing: 0.15rem;
+  font-family: 'Lato', sans-serif;
+  text-transform: uppercase;
+  margin-bottom: 2.5rem;
+}
+
+#actions {
+  max-width: 24rem;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+#actions button {
+  width: 7rem;
+  text-align: center;
+  border-radius: 6px;
+  border: none;
+  padding: 0.5rem 0;
+  background: linear-gradient(#531a89, #4c1f8c);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  color: #e5d9f1;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#actions button:hover {
+  background: linear-gradient(#7e1a89, #7f1f8c);
+}
+
+#counter {
+  font-size: 4rem;
+  font-weight: bold;
+  margin: 0;
+}
