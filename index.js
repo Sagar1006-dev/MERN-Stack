@@ -50,21 +50,34 @@
 
 // storeOrder({id: 5, currency: 'USD', amount: 15.99}); // one argument / value!
 
-function handleTimeOut() {
-    console.log("Timed out!");
-}
+// function handleTimeOut() {
+//     console.log("Timed out!");
+// }
 
-const handleTimeOut2 = () => {
-    console.log("Timed out... again!");
-}
+// const handleTimeOut2 = () => {
+//     console.log("Timed out... again!");
+// }
 
-setTimeout(handleTimeOut, 2000)
-setTimeout(handleTimeOut2, 3000)
-setTimeout(() => {
-    console.log("More timing out....");
-}, 4000)
+// setTimeout(handleTimeOut, 2000)
+// setTimeout(handleTimeOut2, 3000)
+// setTimeout(() => {
+//     console.log("More timing out....");
+// }, 4000)
 
-function greeter(greetfn) {
-    greetfn()
-}
-greeter(() => console.log("HI"))
+// function greeter(greetfn) {
+//     greetfn()
+// }
+// greeter(() => console.log("HI"))
+
+let a;
+a = 10;
+console.log(a);
+b = 11;
+var b;
+console.log(b);
+c = 12;
+let c;
+console.log(c);
+let d;
+console.log(d);
+ d = 13;

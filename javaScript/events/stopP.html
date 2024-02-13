@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Propagation Example</title>
+<style>
+    .outer {
+        background-color: #eee;
+        padding: 20px;
+    }
+    .inner {
+        background-color: #ddd;
+        padding: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="outer" id="outer">
+    Outer Div
+    <div class="inner" id="inner">
+        Inner Div
+    </div>
+</div>
+
+<script>
+document.getElementById('outer').addEventListener('click', function() {
+    console.log('Outer Div clicked');
+});
+
+document.getElementById('inner').addEventListener('click', function(e) {
+    console.log('Inner Div clicked');
+    e.stopPropagation(); // Event propagation ko rokta hai
+});
+</script>
+
+</body>
+</html>
+
+
+<!-- e.stopPropagation() ek JavaScript function hai jo event propagation ko rokta hai. Jab aap ek event listener ko register karte hain, event normally bubbling ya capturing ke through propagate hota hai. Lekin agar aap e.stopPropagation() ka use karte hain, toh event propagation us point par ruk jata hai jahan aapne function ko call kiya hai.
+
+Yeh aapko control deta hai ki event sirf specific element par hi handle ho aur uske ancestors (parents) tak nahi pahunch paye.
+
+Is example mein, agar aap inner div par click karte hain, toh sirf "Inner Div clicked" console mein print hoga. "Outer Div clicked" nahi hoga. Kyunki inner div ke event listener mein e.stopPropagation() ka use kiya gaya hai, jisse event propagation us point par ruk jata hai aur outer div tak nahi pahunch pata. -->

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Handling Example</title>
+</head>
+<body>
+
+<button id="myButton">Click Me!</button>
+
+<script>
+document.getElementById("myButton").addEventListener("click", function(event) {
+    // Preventing default action
+    event.preventDefault();
+
+    // Logging event details to console
+    console.log("Type:", event.type);
+    console.log("Timestamp:", event.timeStamp);
+    console.log("DefaultPrevented:", event.defaultPrevented);
+    console.log("Target:", event.target);
+    console.log("ToElement:", event.toElement);
+    console.log("SrcElement:", event.srcElement);
+    console.log("CurrentTarget:", event.currentTarget);
+    console.log("ClientX:", event.clientX);
+    console.log("ClientY:", event.clientY);
+    console.log("ScreenX:", event.screenX);
+    console.log("ScreenY:", event.screenY);
+    console.log("AltKey:", event.altKey);
+    console.log("CtrlKey:", event.ctrlKey);
+    console.log("ShiftKey:", event.shiftKey);
+    console.log("KeyCode:", event.keyCode); // For click events, keyCode is undefined
+
+//     Type: click
+// main.html:19 Timestamp: 6088.899999999907
+// main.html:20 DefaultPrevented: true
+// main.html:21 Target: <button id=​"myButton">​Click Me!​</button>​
+// main.html:22 ToElement: null
+// main.html:23 SrcElement: <button id=​"myButton">​Click Me!​</button>​
+// main.html:24 CurrentTarget: <button id=​"myButton">​Click Me!​</button>​
+// main.html:25 ClientX: 37
+// main.html:26 ClientY: 18
+// main.html:27 ScreenX: 36
+// main.html:28 ScreenY: 538
+// main.html:29 AltKey: false
+// main.html:30 CtrlKey: false
+// main.html:31 ShiftKey: false
+// main.html:32 KeyCode: undefined
+
+    
+});
+</script>
+
+</body>
+</html>
+
+<!-- Yeh saare terms JavaScript mein events ke saath related hote hain. Events basically hote hain actions jo user karta hai webpage par, jaise ki click karna, mouse move karna, ya koi keyboard button press karna. Yeh terms in events ke details ko describe karte hain:
+
+Type: Type woh event ka naam hai jo hua hai. Jaise ki 'click', 'keydown', 'mousemove', etc.
+
+Timestamp: Timestamp woh exact time hai jab event hua. Yeh usually milliseconds mein hota hai, aur woh time batata hai jab event generated hua.
+
+DefaultPrevented: DefaultPrevented woh property hai jo batata hai ke kya default action jo event ke sath juda hota hai, woh prevent kiya gaya hai ya nahi. Agar true hai, toh default action prevent hui hai, aur agar false hai, toh nahi hui.
+
+Target: Target woh element hai jispe event initially trigger hua. Jaise ki agar koi button click hua hai, toh button woh target hoga.
+
+ToElement, SrcElement, CurrentTarget: Yeh bhi target ko refer karte hain lekin alag-alag tareeke se. ToElement Internet Explorer mein use hota hai, SrcElement old versions of Internet Explorer mein aur CurrentTarget current element jispe event handler attached hai, ko refer karta hai.
+
+ClientX, ClientY, ScreenX, ScreenY: Yeh coordinates hote hain jahan event hua. 'Client' wale coordinates viewport ke top-left corner se measure kiye jate hain, jabki 'Screen' wale coordinates screen ke top-left corner se measure kiye jate hain.
+
+AltKey, CtrlKey, ShiftKey: Yeh properties keyboard ke specific keys jaise ki Alt, Ctrl, Shift ke press hone ya na hone ko indicate karte hain. Agar koi key press hoti hai, toh corresponding property true ho jati hai, warna false.
+
+KeyCode: KeyCode woh numerical value hota hai jo represent karta hai kis key ka press hua hai keyboard se. Har key ke liye alag-alag numerical code hota hai.
+
+Upar diye gaye sabhi terms ke saath ek example samajhne ke liye, consider karein aapke paas ek button hai jo click hone par kuch karta hai. Jab aap button par click karte hain, toh ek 'click' event generate hota hai. Iss event ke saath, aapko ye sab details mil sakti hain:
+
+Type: 'click'
+Timestamp: 1628654625833 (Example timestamp)
+DefaultPrevented: false
+Target: Button element
+ToElement, SrcElement, CurrentTarget: Button element
+ClientX, ClientY, ScreenX, ScreenY: Coordinates of where the click happened on the screen
+AltKey, CtrlKey, ShiftKey: Depends on whether any of these keys were pressed at the time of clicking
+KeyCode: N/A for a click event, relevant for keyboard events -->

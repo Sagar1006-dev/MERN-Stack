@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Events</title>
+    <link rel="stylesheet" href="one.css">
+    <style>
+        .bg-black {
+            background-color: rgba(0, 0, 0, 0.855);
+            color: bisque;
+
+        }
+    </style>
+</head>
+
+<body class="bg-black">
+    <h2>Amazing image</h2>
+    <div>
+        <ul id="images">
+            <li>
+                <img width="200px" id="photoshop"
+                    src="https://images.pexels.com/photos/3561339/pexels-photo-3561339.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                    alt="photoshop" />
+            </li>
+            <li>
+                <img width="200px" id="japan"
+                    src="https://images.pexels.com/photos/3532553/pexels-photo-3532553.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                    alt="" />
+            </li>
+            <li>
+                <img width="200px" id="river"
+                    src="https://images.pexels.com/photos/3532551/pexels-photo-3532551.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                    alt="" />
+            </li>
+            <li>
+                <img width="200px" id="owl"
+                    src="https://images.pexels.com/photos/3532552/pexels-photo-3532552.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                    alt="" />
+            </li>
+            <li>
+                <img width="200px" id="prayer"
+                    src="https://images.pexels.com/photos/2522671/pexels-photo-2522671.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
+                    alt="" />
+            </li>
+            <li>
+                <a style="color: aliceblue" href="https://google.com" id="google">Google</a>
+            </li>
+        </ul>
+</body>
+<script>
+    // document.getElementById('owl').onclick = function(){
+    //     alert("owl Clicked")
+    // }
+    // attachEvent()
+    // jQuery - .on
+    // type, timestamp, defaultPrevented, 
+    // target, toElement, srcElement, currentTarget,
+    //  clientX, clientY, screenX, screenY
+    //  altkey, ctrlkey, shiftkey, keyCode
+    // document.getElementById('images').addEventListener("click", (e) => {
+    //     console.log("clicked inside the ul");
+    // }, true)
+    // document.getElementById('owl').addEventListener("click", (e) => {
+    //     console.log("owl clicked ");
+    //     e.stopPropagation()
+    // }, false)
+
+    // document.getElementById('google').addEventListener("click",(e)=>{
+    //     e.preventDefault()
+    //     e.stopPropagation()
+    //     console.log("google clicked");
+    // },false)
+
+    document.querySelector("#images").addEventListener("click", (e) => {
+        if (e.target.tagName === "IMG") {
+            console.log(e.target.id);
+            let removeIt = e.target.parentNode
+            removeIt.remove()
+        }
+        // removeIt.parentNode.removeChild(removeIt)
+
+    }, false)
+
+
+
+
+</script>
+
+</html>
+
+<!-- e.stopPropagation() ek JavaScript function hai jo event propagation ko rokta hai. Jab aap ek event listener ko register karte hain, event normally bubbling ya capturing ke through propagate hota hai. Lekin agar aap e.stopPropagation() ka use karte hain, toh event propagation us point par ruk jata hai jahan aapne function ko call kiya hai.
+
+Yeh aapko control deta hai ki event sirf specific element par hi handle ho aur uske ancestors (parents) tak nahi pahunch paye. -->

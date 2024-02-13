@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Bubbling and Capturing Example</title>
+<style>
+    .outer {
+        background-color: #eee;
+        padding: 20px;
+    }
+    .inner {
+        background-color: #ddd;
+        padding: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="outer" id="outer">
+    Outer Div
+    <div class="inner" id="inner">
+        Inner Div
+    </div>
+</div>
+
+<script>
+document.getElementById('outer').addEventListener('click', function() {
+    console.log('Outer Div clicked');
+}, true); // true indicates capturing
+
+document.getElementById('inner').addEventListener('click', function() {
+    console.log('Inner Div clicked');
+}, true); // true indicates capturing
+</script>
+<script>
+document.getElementById('outer').addEventListener('click', function() {
+    console.log(' B Outer Div clicked');
+}, false); // false indicates bubbling
+
+document.getElementById('inner').addEventListener('click', function() {
+    console.log(' B Inner Div clicked');
+}, false); // false indicates bubbling
+</script>
+
+</body>
+</html>
+
+<!-- Bubbling aur capturing dono event propagation techniques hain JavaScript mein. Jab koi event hota hai DOM par, woh ek element se shuru hota hai aur phir uske ancestors (parents) tak pahunchta hai. Bubbling mein event sabse niche child element se shuru hokar upar ki taraf chala jata hai, jabki capturing mein event sabse upar parent element se shuru hokar niche ki taraf chala jata hai.
+
+Is example mein, humne ek outer aur inner div banaye hain. Humne dono divs par click event listener lagaya hai. Ab, agar hum inner div par click karte hain, toh output capturing ke hisab se hoga. Yani ki pehle "Outer Div clicked" console mein aayega phir "Inner Div clicked". Yeh isliye kyunki humne event listeners ko capturing mode mein set kiya hai, jisme sabse upar parent element se event start hota hai aur phir niche ki taraf chala jata hai.
+
+Lekin agar hum capturing ko false kar dete hain ya default setting rakh dete hain, toh output bubbling ke hisab se hoga. Yani ki pehle "Inner Div clicked" console mein aayega phir "Outer Div clicked".
+
+Iss example se samajh aata hai ki capturing aur bubbling mein event ka propagation kaafi alag-alag tareeke se hota hai, aur hum inhe apne event listeners ke sath specify kar sakte hain ki kis tareeke se event propagate hoga. -->
+
+
+
+
+
