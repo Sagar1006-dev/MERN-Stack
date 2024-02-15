@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .bg-black {
+            background-color: rgba(0, 0, 0, 0.855);
+            color: bisque;
+
+        }
+    </style>
+</head>
+
+<body class="bg-black">
+    <h1>Chai aur Code</h1>
+    <button id="stop">Stop</button>
+
+</body>
+<script>
+    const saySaga = function () {
+        console.log("Sagar");
+    }
+    setTimeout(saySaga, 2000)
+    const changeText = function () {
+        document.querySelector('h1').innerHTML = "Best JS Series"
+    }
+    const changeMe = setTimeout(changeText, 2000)
+
+    clearTimeout()
+    document.querySelector("#stop").addEventListener('click', function clearTimeout(changeMe) {
+        console.log("Stopped");
+    })
+
+</script>
+
+
+<!-- <script>
+    const saySaga = function () {
+    console.log("Sagar");
+}
+
+const changeText = function () {
+    const h1Element = document.querySelector('h1');
+    if (h1Element.innerHTML === "Best JS Series") {
+        h1Element.innerHTML = "Chai aur Code";
+    } else {
+        h1Element.innerHTML = "Best JS Series";
+    }
+}
+
+setInterval(function() {
+    saySaga();
+    changeText();
+}, 2000);
+
+</script> -->
+
+</html>

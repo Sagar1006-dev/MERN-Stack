@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript</title>
+    <style>
+        .bg-black {
+            background-color: rgba(0, 0, 0, 0.855);
+            color: bisque;
+            /* height: 100vh;
+            /* Set height to full viewport height for centering */
+            display: flex;
+            /* Use flexbox for centering */
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically */
+        } */
+
+        h1 {
+            font-size: 36px;
+            /* Increase font size */
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            /* Add shadow effect */
+        }
+
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            /* Smooth transition for background color */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body class="bg-black">
+    <h1 id="heading">Chai aur JavaScript</h1>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+
+    <script>
+        let intervalId; // Declare a variable to hold the interval ID
+        let headingElement = document.getElementById('heading'); // Reference to the h1 element
+
+        // Function to log the current date and time to the console
+        const sayDate = function (str) {
+            console.log(str, Date.now());
+        }
+
+        document.getElementById("start").addEventListener("click", function () {
+            // Start the interval and store its ID in the intervalId variable
+            intervalId = setInterval(sayDate, 1000, "Hi...");
+            headingElement.textContent = "Best JS Series"; // Change the content of h1
+        });
+
+        document.getElementById("stop").addEventListener("click", function () {
+            // Stop the interval using clearInterval and passing the intervalId
+            clearInterval(intervalId);
+            headingElement.textContent = "Chai aur JavaScript"; // Restore the original content of h1
+        });
+    </script>
+
+</body>
+
+</html>
